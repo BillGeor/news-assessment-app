@@ -1,0 +1,31 @@
+.toolbar {
+    background-color: #254A75;
+}
+
+.user-button {
+    background-color: #4A90E2;
+    border-color: white;
+    border-width: thin;
+}
+
+.container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.menu-item {
+    justify-content: center;
+    cursor: pointer;
+}
+
+.color-white {
+    color: white;
+}
+
+.color-light-gray {
+    color: lightgrey;
+}
+
+.link:hover{
+    text-decoration:none
+}

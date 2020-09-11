@@ -1,0 +1,30 @@
+<mat-toolbar class="toolbar container color-white">
+    <div class="container">
+        <div class="dropdown" appDropdown>
+            <button 
+                type="button" 
+                data-toggle="dropdown"
+                disableRipple="true"
+                role="button" 
+                mat-button 
+                class="menu-button dropdown-toggle color-white">
+                Hi {{ user.firstName }} <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu">
+                <li><a class="dropdown-item menu-item">Settings</a></li>
+                <li><a class="dropdown-item menu-item">Logout</a></li>
+            </div>
+        </div>
+        <button 
+            disableRipple="true"
+            mat-icon-button 
+            mat-stroked-button 
+            isRoundButton="true" 
+            class="user-button">
+            {{ user.firstName[0] + user.lastName[0] }}
+        </button>
+    </div>
+
+    
+</mat-toolbar>
+
