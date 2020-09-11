@@ -1,0 +1,16 @@
+.top-bar {
+    align-content: space-around;
+}
+
+.pad1 {
+    padding-top: 16px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchbar {
+    padding-right: 15px;
+}

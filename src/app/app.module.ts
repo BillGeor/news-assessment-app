@@ -13,6 +13,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MenuButtonComponent } from './header/menu-button/menu-button.component';
 import { MatIconModule } from '@angular/material/icon';
+import { FiltersComponent } from './news/filters/filters.component';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { SearchbarComponent } from './news/filters/searchbar/searchbar.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -23,6 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
     NewsComponent,
     DropdownDirective,
     MenuButtonComponent,
+    FiltersComponent,
+    SearchbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +41,12 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatToolbarModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

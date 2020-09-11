@@ -1,5 +1,8 @@
-import { Subscription } from 'rxjs';
+import { NewsService } from './news.service';
+import { Article } from './../shared/news.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-news',
@@ -8,10 +11,22 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class NewsComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  articleList : Article[] = [];
+  articleSub: Subscription;
+
+
+  constructor(
+    private newsService: NewsService 
+  ) { }
 
   ngOnInit(): void {
-   
+    this.articleList = this.newsService.getArticles();
+    this.articleSub = this.newsService.articlesChanged
+      .subscribe(
+        (articles: Article[]) => {
+          this.articleList = articles;
+        }
+      );
   }
 
   onEditItem() {

@@ -1,11 +1,30 @@
-<div class="row">
-    <div class="col-xs-10">
-        <hr>
-        <ul class="list-group">
-            <a style='cursor: pointer' 
-            class="list-group-item"
-            (click)="onEditItem()"> 
-            </a>
-        </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="filter-container">
+                <app-filters></app-filters>
+            </div>
+            <hr>
+            <div class="news-container">
+                <mat-card 
+                    class="news-card"
+                    *ngFor="let article of articleList;"> 
+                    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                    <mat-card-header>
+                        <mat-card-title>{{ article.title }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>{{ article.description }}</p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <p>
+                            <mat-icon inline="true">local_offer</mat-icon>
+                            {{ article.category }}
+                        </p>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+            
+        </div>
     </div>
 </div>
