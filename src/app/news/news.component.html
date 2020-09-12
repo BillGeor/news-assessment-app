@@ -5,7 +5,15 @@
                 <app-filters></app-filters>
             </div>
             <hr>
-            <div class="news-container">
+            <app-alert 
+                [message]="error" 
+                *ngIf="error" 
+                (close)="onHandleError()">
+            </app-alert>
+            <div *ngIf="isLoading" style="text-align: center;">
+                <app-loading-spinner></app-loading-spinner>
+            </div>
+            <div *ngIf="!isLoading" class="news-container">
                 <mat-card 
                     class="news-card"
                     *ngFor="let article of articleList;"> 
@@ -29,7 +37,6 @@
                     [pageIndex]="pageIndex"
                     (page)="onPageChange($event);">
                 </mat-paginator>
-                  
             </div>
             
         </div>

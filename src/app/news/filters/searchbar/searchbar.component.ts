@@ -1,17 +1,38 @@
-import {Component} from '@angular/core';
+import { NewsService } from './../../news.service';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { debounceTime, delay, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'searchbar',
   templateUrl: './searchbar.component.html',
   styleUrls: ['./searchbar.component.css'],
 })
-export class SearchbarComponent {
-  value = '';
+export class SearchbarComponent implements OnInit {
+  searchValue = new FormControl('');
+
+  constructor(
+    private newsService: NewsService,
+  ) {}
+
+  ngOnInit() {
+    this.onChange();
+  }
 
   clearSearch() {
-    this.value = "";
+    this.searchValue.reset();
   }
-  clearField() {
-    this.value = "";
+
+  onChange() {
+    this.searchValue.valueChanges
+      .pipe(
+        debounceTime(1000)
+      )
+      .subscribe(
+        (val) => {
+          this.newsService.search(val)
+        }
+      )
   }
 }

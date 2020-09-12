@@ -1,9 +1,13 @@
 import { NewsService } from './news.service';
-import { Article } from './../shared/news.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Article } from '../shared/helperInterfaces/news.model';
+import { Component, OnInit, OnDestroy, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
+import { AlertComponent } from '../shared/alert/alert.component';
+import { ServiceResponse } from '../shared/helperInterfaces/service-response.model';
+
+
 
 @Component({
   selector: 'app-news',
@@ -11,53 +15,56 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   styleUrls: ['./news.component.css']
 })
 export class NewsComponent implements OnInit, OnDestroy {
-
-  // Article Data
+  // Service and data control vars
+  isLoading: boolean = true;
   articleList : Article[] = [];
   articleSub: Subscription;
-  lengthSub: Subscription;
+  error: string = null;
 
-  // Article Paginator data
-  listLength: number = 100;
+  // Article Paginator control data
+  listLength: number = 0;
   pageIndex: number = 0;
   pageSize: number = 6;
 
   
   constructor(
-    private newsService: NewsService 
+    private newsService: NewsService,
+    private factoryResolver: ComponentFactoryResolver
   ) { }
 
   ngOnInit(): void {
-    this.getArticles();
-    
     this.articleSub = this.newsService.articlesChanged
       .subscribe(
-        (articles: Article[]) => {
-          this.articleList = articles;
+        (response: ServiceResponse) => {  
+          // response mapping
+          this.articleList = response.articles; 
+          this.listLength = response.totalResults; 
+          this.error = response.error;
+        
+          // loading handler
+          this.isLoading = false;
         }
       );
-    this.lengthSub = this.newsService.totalResults
-      .subscribe(
-        (queryLength) => {
-          this.listLength = queryLength;
-        }
-      )
+      this.getArticles();
+  }
+
+  onPageChange(event: PageEvent) {
+    this.isLoading = true;
+    this.getArticles(event.pageIndex);
+    this.pageIndex++
   }
 
   getArticles(
     pageIndex: number = 0
   ) {
-    this.newsService.fetchArticles(pageIndex).subscribe();
-    this.articleList = this.newsService.getArticles();
-  }
-
-  onPageChange(event: PageEvent) {
-    console.log(event);
-    this.getArticles(event.pageIndex);
+    this.newsService.fetchArticles(pageIndex)
   }
 
   ngOnDestroy() {
     this.articleSub.unsubscribe();
-    this.lengthSub.unsubscribe();
+  }
+
+  onHandleError() {
+    this.error = null;
   }
 }

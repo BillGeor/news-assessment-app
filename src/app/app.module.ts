@@ -1,6 +1,6 @@
+import { SharedModule } from './shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { DropdownDirective } from './shared/dropdownDirective.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -29,7 +29,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     HeaderComponent,
     FooterComponent,
     NewsComponent,
-    DropdownDirective,
     MenuButtonComponent,
     FiltersComponent,
     SearchbarComponent,
@@ -49,7 +48,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatInputModule,
     MatCardModule,
     HttpClientModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

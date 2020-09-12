@@ -11,14 +11,15 @@ interface Category {
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
-  animalControl = new FormControl('');
-  selectFormControl = new FormControl('');
+  categoryControl = new FormControl('');
+
   categories: Category[] = [
     {name: 'Dog'},
     {name: 'Cat'},
     {name: 'Cow'},
     {name: 'Fox'},
   ];
+  
   constructor() { }
 
   ngOnInit(): void {
