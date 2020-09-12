@@ -9,7 +9,7 @@
                 <mat-card 
                     class="news-card"
                     *ngFor="let article of articleList;"> 
-                    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                    <img mat-card-image [src]="article.img" alt="Photo of a Shiba Inu">
                     <mat-card-header>
                         <mat-card-title>{{ article.title }}</mat-card-title>
                     </mat-card-header>
@@ -23,6 +23,13 @@
                         </p>
                     </mat-card-actions>
                 </mat-card>
+                <mat-paginator 
+                    [length]="listLength"
+                    [pageSize]="pageSize"
+                    [pageIndex]="pageIndex"
+                    (page)="onPageChange($event);">
+                </mat-paginator>
+                  
             </div>
             
         </div>

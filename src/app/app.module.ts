@@ -20,7 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { SearchbarComponent } from './news/filters/searchbar/searchbar.component';
 import { MatCardModule } from '@angular/material/card';
-
+import { HttpClientModule } from '@angular/common/http';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,9 @@ import { MatCardModule } from '@angular/material/card';
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    HttpClientModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

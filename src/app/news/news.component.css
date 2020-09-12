@@ -24,3 +24,7 @@
     background-size: cover;
     max-width: 350px;
 }
+
+.mat-form-field {
+    margin-right: 12px;
+  }

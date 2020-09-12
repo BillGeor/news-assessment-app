@@ -1,152 +1,92 @@
-import { Subject } from 'rxjs';
+import { environment } from './../../environments/environment';
+import { Subject, Subscription, Observable } from 'rxjs';
 import { Article } from './../shared/news.model';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError, map, tap } from 'rxjs/operators';
+
+interface ApiRes {
+    status: string;
+    totalResults: number;
+    articles: ApiArticle[]
+}
+
+interface ApiArticle {
+    author: string,
+    content: string,
+    description: string,
+    publishedAt: string,
+    source: { id: string, name: string }
+    title: string,
+    url: string, 
+    urlToImage: string
+}
 
 @Injectable({providedIn: 'root'})
 export class NewsService {
-    articlesChanged = new Subject<Article[]>();
-    startedEditing = new Subject<number>();
+    private articles: Article[] = [];
+    apiSub: Observable<ApiRes>;
+    fetchFilter: string = "all";
     
-    private articles: Article[] = [
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
-        ),
-        new Article(
-            "ABC News (AU)",
-            "Australia's most trusted source of local, national, and world news. Comperhensive independent, in-depth analysis, the latest business, sport, weather and more.",
-            "https://lh3.googleusercontent.com/Yq_3YOVf7Il2E4nLu8a0sKPsz5gvpWu9yOX9WA6dJoX45B1zlq_kqLBwNdCnINLDxlc=s180-rw",
-            "General"
+    totalResults = new Subject<number>();
+    articlesChanged = new Subject<Article[]>();
+
+
+    constructor(
+        private http: HttpClient, 
+    ) {}
+
+
+    fetchArticles(
+        pageNum: number
+    ) {
+        pageNum++;
+        return this.http.get<ApiRes>(
+            `https://newsapi.org/v2/everything?q=${this.fetchFilter}&pageSize=6&page=${pageNum}&apiKey=${environment.newsAPIkey}`
+        ).pipe(
+            // catchError(
+            //     error => {
+            //         console.log(error)
+            //     }
+            // ),
+            tap(    // Update number of results
+                (response: ApiRes) => {
+                    this.totalResults.next(response.totalResults);
+                }
+            ),
+            map(    // Convert response to desired form
+                (response: ApiRes) => {
+                    return(response.articles);
+                }
+            ),
+            tap(    // Reset and populate article array 
+                (articles: ApiArticle[]) => {
+                    this.clearArticles();
+                    for (let article of articles) {
+                        this.articles.push(
+                            new Article(
+                                article.title,
+                                article.description,
+                                article.urlToImage,
+                                "general"
+                            )
+                        )
+                    }
+                    this.articlesChanged.next(this.articles);
+                }
+            )
         )
-    ];
+    }
 
     /**
-     * Only gets a copy, not the reference of ingredients
+     * Only gets a copy, not the reference of the articles array
      */
     getArticles() {
         return this.articles.slice();
     }
 
-    getArticle(index: number) {
-        return this.articles[index];
-    }
 
-    addArticles(ingredient: Article) {
-        this.articles.push(ingredient);
-        this.articlesChanged.next(this.getArticles());
+    private clearArticles() {
+        this.articles = [];
     }
-
-    updateArticle(index: number, newIngredient: Article) {
-        this.articles[index] = newIngredient;
-        this.articlesChanged.next(this.articles.slice());
-    }
-
-    deleteArticle(index: number) {
-        this.articles.splice(index, 1);
-        this.articlesChanged.next(this.articles.slice());
-    }
-
-    addMultipleArticles(articles: Article[]) {
-        this.articles.push(...articles);
-        this.articlesChanged.next(this.getArticles());
-    }
-    
 }
