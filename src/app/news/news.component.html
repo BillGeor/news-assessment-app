@@ -2,7 +2,9 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="filter-container">
-                <app-filters></app-filters>
+                <app-filters
+                    (categoryChanged)="onCategoryChange($event)"
+                ></app-filters>
             </div>
             <hr>
             <app-alert 
@@ -17,7 +19,11 @@
                 <mat-card 
                     class="news-card"
                     *ngFor="let article of articleList;"> 
-                    <img mat-card-image [src]="article.img" alt="Photo of a Shiba Inu">
+                    <img 
+                        mat-card-image 
+                        [src]="article.img" 
+                        *ngIf="article.img"
+                        alt="Photo did not load">
                     <mat-card-header>
                         <mat-card-title>{{ article.title }}</mat-card-title>
                     </mat-card-header>
@@ -25,20 +31,19 @@
                         <p>{{ article.description }}</p>
                     </mat-card-content>
                     <mat-card-actions>
-                        <p>
+                        <!-- <p>
                             <mat-icon inline="true">local_offer</mat-icon>
                             {{ article.category }}
-                        </p>
+                        </p> -->
                     </mat-card-actions>
                 </mat-card>
                 <mat-paginator 
                     [length]="listLength"
                     [pageSize]="pageSize"
-                    [pageIndex]="pageIndex"
+                    [pageIndex]="pageIndex - 1"
                     (page)="onPageChange($event);">
                 </mat-paginator>
             </div>
-            
         </div>
     </div>
 </div>

@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/newsPage', pathMatch: 'full' },
-  { path: 'newsPage', component: NewsComponent }
+  { path: '', redirectTo: '/home/1/none/all', pathMatch: 'full' },
+  { path: 'home/:page/:category/:filter', component: NewsComponent },
+  {path: '**', redirectTo: 'home/1/none/all'}
 
 ];
 

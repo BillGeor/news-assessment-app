@@ -17,22 +17,18 @@ export class SearchbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.onChange();
-  }
-
-  clearSearch() {
-    this.searchValue.reset();
-  }
-
-  onChange() {
     this.searchValue.valueChanges
       .pipe(
-        debounceTime(1000)
+        debounceTime(400)
       )
       .subscribe(
         (val) => {
           this.newsService.search(val)
         }
       )
+  }
+
+  clearSearch() {
+    this.searchValue.reset();
   }
 }
